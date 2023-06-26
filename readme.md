@@ -1,4 +1,6 @@
-## Quick start
+## How to run
+
+1. make run-api run=config tags=v1
 
 ## How to setting vscode build tags
 
