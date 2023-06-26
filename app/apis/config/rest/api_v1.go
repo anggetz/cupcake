@@ -3,7 +3,7 @@
 package rest
 
 import (
-	"cupcake/adapters/apis"
+	"cupcake/interface/apis"
 
 	"github.com/gin-gonic/gin"
 )
