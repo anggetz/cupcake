@@ -63,6 +63,8 @@ func (i *ImplementDatabase) Get(tableName string, dest interface{}, qBuilder []D
 		whereClause := i.buildWhereClauseMongo(qBuilder, "")
 
 		err = conDb.Get(tableName, dest, whereClause)
+	} else if conDb.DBClientName() == "mock" {
+		err = conDb.Get(tableName, dest, "")
 	} else {
 		return fmt.Errorf(conDb.DBClientName(), "NOT SUPPORTTED")
 	}

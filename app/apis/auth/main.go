@@ -38,6 +38,8 @@ func main() {
 
 	r := gin.Default()
 
+	// let' try singleton bros
+
 	// register router
 	apiGroup := r.Group("/v1/auth")
 	apiGroup.GET("/get")
