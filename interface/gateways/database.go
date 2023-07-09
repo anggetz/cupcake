@@ -44,19 +44,20 @@ func NewDatabase(implementor Database, databaseOption *DatabaseOption) *Implemen
 	}
 }
 
+func (i *ImplementDatabase) Close() error {
+	return i.database.Close()
+}
+
 func (i *ImplementDatabase) Get(tableName string, dest interface{}, qBuilder []DatabaseWhereQueryBuilder) error {
 	conDb, err := i.database.Connect(i.databaseOption)
 	if err != nil {
 		return err
 	}
 
-	defer conDb.Close()
-
 	if conDb.DBClientName() == "pg" {
 
 		whereClause := i.buildWhereClausePg(qBuilder, "")
 
-		fmt.Println(whereClause)
 		err = conDb.Get(tableName, dest, whereClause)
 	} else if conDb.DBClientName() == "mongo" {
 		whereClause := i.buildWhereClauseMongo(qBuilder, "")

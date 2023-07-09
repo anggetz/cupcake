@@ -33,6 +33,7 @@ func (a *Api) Get(g *gin.Context) {
 		Host:     a.conf.Databases["mongo"].Host,
 		Port:     a.conf.Databases["mongo"].Port,
 	})
+	defer db.Close()
 
 	user := []entities.User{}
 	err := db.Get("users", &user, []gateways.DatabaseWhereQueryBuilder{
