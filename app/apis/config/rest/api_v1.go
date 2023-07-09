@@ -4,9 +4,9 @@ package rest
 
 import (
 	"cupcake/app/databases"
-	"cupcake/entities"
 	"cupcake/interface/apis"
 	"cupcake/interface/gateways"
+	"cupcake/interface/presenters"
 
 	"cupcake/internal/helpers"
 	"cupcake/pkg"
@@ -35,7 +35,7 @@ func (a *Api) Get(g *gin.Context) {
 	})
 	defer db.Close()
 
-	user := []entities.User{}
+	user := []presenters.UserAllDataView{}
 	err := db.Get("users", &user, []gateways.DatabaseWhereQueryBuilder{
 		{
 			Op:    "eq",

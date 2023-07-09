@@ -10,6 +10,7 @@ import (
 	"cupcake/interface/gateways"
 	"github.com/gin-gonic/gin"
 
+	"cupcake/interface/presenters"
 	"cupcake/internal/helpers"
 	"cupcake/pkg"
 )
@@ -41,6 +42,7 @@ func (a *Api) Get(g *gin.Context) {
 			Value: "'test'",
 		},
 	})
+	defer db.Close()
 
 	if err != nil {
 		g.JSON(500, helpers.HttpResponse{
@@ -49,7 +51,15 @@ func (a *Api) Get(g *gin.Context) {
 		return
 	}
 
+	res, err := presenters.UserAllData(user)
+	if err != nil {
+		g.JSON(500, helpers.HttpResponse{
+			Data: err.Error(),
+		})
+		return
+	}
+
 	g.JSON(200, helpers.HttpResponse{
-		Data: user,
+		Data: res,
 	})
 }
