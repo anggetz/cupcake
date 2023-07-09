@@ -1,1 +1,14 @@
 AppName: "test"
+Databases:
+  mongo:
+    Username: ""
+    Password: ""
+    Host: "localhost"
+    Port: "27017"
+    Database: "testcupcake"
+  pg:
+    Username: "postgres"
+    Password: "postgres"
+    Host: "localhost"
+    Port: "5432"
+    Database: "testcupcake"

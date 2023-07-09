@@ -32,12 +32,13 @@ func (i *PgWrapper) Close() error {
 	return i.db.Close()
 }
 
-func (i *PgWrapper) Connect() (gateways.Database, error) {
+func (i *PgWrapper) Connect(dbOption gateways.DatabaseOption) (gateways.Database, error) {
 	db := pg.Connect(&pg.Options{
-		User:     "postgres",
-		Password: "postgres",
+		User:     dbOption.Username,
+		Password: dbOption.Password,
 		PoolSize: 50,
-		Database: "testcupcake",
+		Database: dbOption.Database,
+		Addr:     dbOption.Host + ":" + dbOption.Port,
 	})
 
 	i.db = db

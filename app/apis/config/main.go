@@ -6,18 +6,15 @@ import (
 	"flag"
 	"fmt"
 
+	"cupcake/pkg"
+
 	"github.com/gin-gonic/gin"
 	"github.com/nats-io/nats.go"
 	"github.com/spf13/viper"
 )
 
-type config struct {
-	AppName string
-}
-
 func main() {
 
-	var conf config
 	var configPath = flag.String("config", "app.yml", "please input config path")
 
 	flag.Parse()
@@ -29,7 +26,7 @@ func main() {
 		fmt.Errorf("unable to read config file. %s", err.Error())
 	}
 
-	if err := v.Unmarshal(&conf); err != nil {
+	if err := v.Unmarshal(&pkg.Conf); err != nil {
 		fmt.Errorf("unable to parse config file. %s", err.Error())
 	}
 
@@ -37,13 +34,13 @@ func main() {
 
 	// register router
 	apiGroup := r.Group("/v1/config")
-	apiGroup.GET("/get", rest.NewApi().Get)
+	apiGroup.GET("/get", rest.NewApi(&pkg.Conf).Get)
 
 	// register nats
 	// Connect to a server
 	nc, _ := nats.Connect(nats.DefaultURL)
 
-	confMarshalled, err := json.Marshal(conf)
+	confMarshalled, err := json.Marshal(pkg.Conf)
 	if err != nil {
 		panic(err)
 	}

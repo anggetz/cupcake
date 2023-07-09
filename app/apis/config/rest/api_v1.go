@@ -9,19 +9,30 @@ import (
 	"cupcake/interface/gateways"
 
 	"cupcake/internal/helpers"
+	"cupcake/pkg"
 
 	"github.com/gin-gonic/gin"
 )
 
-type Api struct{}
+type Api struct {
+	conf *pkg.Config
+}
 
-func NewApi() apis.Config {
-	return &Api{}
+func NewApi(conf *pkg.Config) apis.Config {
+	return &Api{
+		conf: conf,
+	}
 }
 
 func (a *Api) Get(g *gin.Context) {
 
-	db := gateways.NewDatabase(databases.NewMongoWrapper())
+	db := gateways.NewDatabase(databases.NewMongoWrapper(), &gateways.DatabaseOption{
+		Username: a.conf.Databases["mongo"].Username,
+		Password: a.conf.Databases["mongo"].Password,
+		Database: a.conf.Databases["mongo"].Database,
+		Host:     a.conf.Databases["mongo"].Host,
+		Port:     a.conf.Databases["mongo"].Port,
+	})
 
 	user := []entities.User{}
 	err := db.Get("users", &user, []gateways.DatabaseWhereQueryBuilder{

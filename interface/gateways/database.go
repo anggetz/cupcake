@@ -10,12 +10,16 @@ type Database interface {
 	// first is tableName
 	Get(tableName string, dest interface{}, whereBuilder interface{}) error
 	Close() error
-	Connect() (Database, error)
+	Connect(DatabaseOption) (Database, error)
 	DBClientName() string
 }
 
-type DatabaseModel interface {
-	TableName() string
+type DatabaseOption struct {
+	Username string
+	Password string
+	Database string
+	Host     string
+	Port     string
 }
 
 type DatabaseWhereQueryBuilder struct {
@@ -27,18 +31,21 @@ type DatabaseWhereQueryBuilder struct {
 }
 
 type ImplementDatabase struct {
-	database     Database
-	QueryBuilder []DatabaseWhereQueryBuilder
+	database       Database
+	databaseOption DatabaseOption
+	QueryBuilder   []DatabaseWhereQueryBuilder
 }
 
-func NewDatabase(implementor Database) *ImplementDatabase {
+func NewDatabase(implementor Database, databaseOption *DatabaseOption) *ImplementDatabase {
+
 	return &ImplementDatabase{
-		database: implementor,
+		database:       implementor,
+		databaseOption: *databaseOption,
 	}
 }
 
 func (i *ImplementDatabase) Get(tableName string, dest interface{}, qBuilder []DatabaseWhereQueryBuilder) error {
-	conDb, err := i.database.Connect()
+	conDb, err := i.database.Connect(i.databaseOption)
 	if err != nil {
 		return err
 	}

@@ -1,7 +1,7 @@
 package main
 
 import (
-	"cupcake/app/apis/auth/pkg"
+	"cupcake/pkg"
 	"encoding/json"
 	"log"
 	"time"

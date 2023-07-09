@@ -45,17 +45,24 @@ func (i *MongoWrapper) Close() error {
 	return i.dbClient.Disconnect(context.Background())
 }
 
-func (i *MongoWrapper) Connect() (gateways.Database, error) {
+func (i *MongoWrapper) Connect(dbOption gateways.DatabaseOption) (gateways.Database, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancel()
-	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://localhost:27017"))
+
+	// if we set the username or password , we will used cred
+	mongoCred := ""
+	if dbOption.Username != "" && dbOption.Password != "" {
+		mongoCred = dbOption.Username + ":" + dbOption.Password + "@"
+	}
+
+	client, err := mongo.Connect(ctx, options.Client().ApplyURI("mongodb://"+mongoCred+dbOption.Host+":"+dbOption.Port))
 
 	if err != nil {
 		return nil, err
 	}
 
 	i.dbClient = client
-	i.db = client.Database("testcupcake")
+	i.db = client.Database(dbOption.Database)
 
 	return i, nil
 
