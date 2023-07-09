@@ -3,7 +3,12 @@
 package rest
 
 import (
+	"cupcake/app/databases"
+	"cupcake/entities"
 	"cupcake/interface/apis"
+	"cupcake/interface/gateways"
+
+	"cupcake/internal/helpers"
 
 	"github.com/gin-gonic/gin"
 )
@@ -15,5 +20,26 @@ func NewApi() apis.Config {
 }
 
 func (a *Api) Get(g *gin.Context) {
-	g.JSON(200, "test v1")
+
+	db := gateways.NewDatabase(databases.NewMongoWrapper())
+
+	user := []entities.User{}
+	err := db.Get("users", &user, []gateways.DatabaseWhereQueryBuilder{
+		{
+			Op:    "eq",
+			Field: "Username",
+			Value: "test",
+		},
+	})
+
+	if err != nil {
+		g.JSON(500, helpers.HttpResponse{
+			Data: err.Error(),
+		})
+		return
+	}
+
+	g.JSON(200, helpers.HttpResponse{
+		Data: user,
+	})
 }
