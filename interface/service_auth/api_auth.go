@@ -1,7 +1,7 @@
-package apis
+package serviceauth
 
 import "github.com/gin-gonic/gin"
 
-type Auth interface {
+type ApiAuth interface {
 	Login(*gin.Context)
 }

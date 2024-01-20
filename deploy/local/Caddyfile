@@ -1,0 +1,5 @@
+{$CUPCAKE_HOST} {
+	route {
+		reverse_proxy	/v1/auth/*	{$CUPCAKE_SERVICE_AUTH_HOST}
+	}
+}

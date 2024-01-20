@@ -1,6 +1,11 @@
 package helpers
 
-import "encoding/json"
+import (
+	"encoding/json"
+	"io"
+
+	"github.com/gin-gonic/gin"
+)
 
 func ToolCopyStruct(source interface{}, target interface{}) error {
 	byteSource, err := json.Marshal(source)
@@ -14,4 +19,14 @@ func ToolCopyStruct(source interface{}, target interface{}) error {
 	}
 
 	return nil
+}
+
+func GetGinContextBody(c *gin.Context, dest interface{}) error {
+	jsonData, err := io.ReadAll(c.Request.Body)
+	if err != nil {
+		// Handle error
+		return err
+	}
+
+	return json.Unmarshal(jsonData, dest)
 }

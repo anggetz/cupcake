@@ -1,4 +1,8 @@
-tags=v1
-
-run-api:
-	go run -tags $(tags) app\apis\$(run)\main.go
+run-nats:
+	nats-server
+run-service-config:
+	go run app\services\config\main.go
+run-service-auth:
+	go run app\services\auth\main.go
+run-caddy:
+	caddy run --config=deploy\local\Caddyfile --envfile=.env
